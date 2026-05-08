@@ -1,54 +1,131 @@
 Financial Document Analyzer
-Financial Document Analyzer is an AI-powered backend application that analyzes financial PDF reports and generates structured financial insights using a multi-agent AI workflow. Built with FastAPI, CrewAI, and OpenAI models, the system focuses on delivering evidence-based analysis where every insight is strictly derived from the uploaded document without speculation or external data.
-The application processes uploaded financial documents through a sequential pipeline of specialized AI agents. The Verifier Agent validates the PDF and extracts factual information, the Financial Analyst Agent evaluates revenue, profitability, and cash flow performance, the Risk Assessor identifies financial risks mentioned in the report, and the Investment Advisor combines all findings into a structured JSON response.
-The API supports PDF uploads through REST endpoints, temporary file handling, UUID-based tracking, JSON validation, and automated cleanup after processing. The final output includes detailed revenue analysis, profitability insights, cash flow evaluation, risk assessment, and investment recommendations generated entirely from document evidence.
-Key Highlights
+Overview
+An AI-powered financial analysis system that processes financial PDF reports and generates structured insights using a multi-agent AI pipeline. The project is built using FastAPI, CrewAI, OpenAI GPT models, and LangChain-based PDF processing.
+The system follows an evidence-based approach where all generated insights are strictly derived from the uploaded financial document without speculation, external sources, or hallucinated information.
+
+Features
 
 
-Built a multi-agent AI pipeline using CrewAI with 4 specialized financial analysis agents
+Financial PDF upload and analysis
 
 
-Developed scalable REST APIs using FastAPI and Uvicorn
+Multi-agent AI workflow using CrewAI
 
 
-Integrated OpenAI GPT models for document-grounded financial reasoning
+Revenue, profitability, and cash flow analysis
 
 
-Implemented PDF extraction using LangChain PyPDFLoader
+Financial risk assessment
 
 
-Designed evidence-only prompting to reduce hallucination and speculative outputs
+Evidence-grounded investment insights
 
 
-Added structured JSON validation and error handling mechanisms
+Structured JSON output generation
 
 
-Implemented secure temporary file management and cleanup workflows
+UUID-based analysis tracking
 
 
-Generated machine-readable financial insights for automation and analytics use cases
+Temporary file storage and automatic cleanup
 
+
+Robust API validation and error handling
+
+
+
+Multi-Agent Pipeline
+Verifier Agent
+
+
+Validates PDF readability
+
+
+Extracts factual financial information
+
+
+Ensures document-grounded outputs
+
+
+Financial Analyst Agent
+
+
+Analyzes revenue trends
+
+
+Evaluates profitability metrics
+
+
+Reviews cash flow performance
+
+
+Risk Assessor Agent
+
+
+Identifies financial and operational risks
+
+
+Detects liquidity concerns and disclosures
+
+
+Investment Advisor Agent
+
+
+Combines insights from all agents
+
+
+Generates balanced investment analysis
+
+
+Produces final structured JSON response
+
+
+
+Workflow
+PDF Upload → FastAPI Endpoint → PDF Extraction → CrewAI Agent Pipeline → JSON Validation → Structured Financial Analysis
+
+API Endpoints
+MethodEndpointDescriptionGET/Health check endpointPOST/analyzeUpload PDF and generate analysis
+
+Output Structure
+{  "revenue_analysis": "",  "profitability_analysis": "",  "cash_flow_analysis": "",  "risk_assessment": "",  "investment_insight": ""}
 
 Tech Stack
+TechnologyPurposeFastAPIBackend API FrameworkCrewAIMulti-Agent OrchestrationOpenAI GPT-4o-miniFinancial Reasoning & AnalysisLangChain PyPDFLoaderPDF Text ExtractionUvicornAPI ServerChromaDBVector Storage Supportpython-dotenvEnvironment Configuration
+
+Security & Reliability
 
 
-Backend: FastAPI
+Accepts only .pdf files
 
 
-AI Orchestration: CrewAI
+Environment-based API key management
 
 
-LLM: OpenAI GPT-4o-mini
+Temporary file cleanup after processing
 
 
-PDF Processing: LangChain PyPDFLoader
+Structured JSON schema validation
 
 
-Server: Uvicorn
+Evidence-only prompting to minimize hallucination
 
 
-Database/Storage: ChromaDB
+
+Key Achievements
 
 
-Environment Management: python-dotenv
+Developed a scalable AI-powered financial analysis backend
+
+
+Designed a modular 4-agent financial intelligence pipeline
+
+
+Implemented document-grounded AI analysis workflows
+
+
+Automated extraction and interpretation of financial reports
+
+
+Built production-ready REST APIs with structured outputs
 
