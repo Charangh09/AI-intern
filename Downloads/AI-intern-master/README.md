@@ -1,198 +1,87 @@
 # Financial Document Analyzer
 
-![License](https://img.shields.io/github/license/Charangh09/AI-intern)
-![Python](https://img.shields.io/badge/python-3.11%2B-blue)
-![Issues](https://img.shields.io/github/issues/Charangh09/AI-intern)
-![CI](https://img.shields.io/github/actions/workflow/status/Charangh09/AI-intern/ci.yml?branch=main)
+![Python](https://img.shields.io/badge/Python-3.11%2B-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-API-009688)
+![CrewAI](https://img.shields.io/badge/CrewAI-Multi--Agent-orange)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-Financial Document Analyzer is a focused FastAPI service that analyzes financial PDF documents using a multi-agent AI pipeline. Outputs are evidence-based, strictly grounded in the uploaded PDF, and returned as structured JSON for downstream consumption.
+An AI-powered financial document analysis system that turns financial PDF reports into structured, decision-ready insights.
 
-✨ Key goals: accuracy, traceability, and production readiness.
+Financial Document Analyzer uses a multi-agent workflow to validate uploaded reports, extract key financial signals, and return a clean JSON summary covering revenue, profitability, cash flow, risk, and investment outlook.
 
-----
+## Project Overview
 
-## Highlights
+Financial reports can be dense, repetitive, and difficult to review quickly. This project provides a focused FastAPI service that helps automate the first layer of financial document analysis while keeping the output structured and easy to consume.
 
-- Evidence-first analysis: nothing is inferred beyond the document.
-- Multi-agent pipeline orchestrated by CrewAI for separation of concerns.
-- Uses LangChain `PyPDFLoader` for robust PDF ingestion.
-- Clean JSON output saved in `outputs/` and temporary files removed.
+The system is designed around a simple idea: upload a PDF, let specialized AI agents review it from different angles, and receive a concise financial insight report that can support faster review and decision-making.
 
-## Architecture & Workflow
+## Features
 
-1. Client uploads a financial PDF to `POST /analyze`.
-2. File is stored temporarily in `data/`.
-3. CrewAI runs four agents sequentially:
-   - Verifier Agent — validate PDF and extract facts.
-   - Financial Analyst Agent — revenue, profitability, cash flow analysis.
-   - Risk Assessor Agent — identify stated financial risks.
-   - Investment Advisor Agent — synthesize a balanced investment insight.
-4. System returns structured JSON and stores the output in `outputs/`.
-5. Temporary files are deleted.
+- PDF-based financial report analysis
+- Multi-agent workflow powered by CrewAI
+- Structured JSON output for easy downstream use
+- Revenue, profitability, cash flow, risk, and investment insight coverage
+- Automatic temporary file cleanup after processing
+- Environment-based configuration for safer secret handling
+- Lightweight FastAPI backend suitable for demos, prototypes, and extensions
 
-Required output keys
+## Workflow
 
-- `revenue_analysis`
-- `profitability_analysis`
-- `cash_flow_analysis`
-- `risk_assessment`
-- `investment_insight`
+1. A user uploads a financial PDF report.
+2. The file is validated and prepared for processing.
+3. The document is read using LangChain `PyPDFLoader`.
+4. Four AI agents analyze the report from separate financial perspectives.
+5. The system returns structured JSON insights.
+6. Temporary files are cleaned automatically.
 
-----
+## Multi-Agent Pipeline
+
+The analysis is handled by four specialized agents:
+
+| Agent | Role |
+| --- | --- |
+| Verifier Agent | Checks whether the uploaded document is valid and suitable for analysis. |
+| Financial Analyst Agent | Reviews revenue, profitability, and cash flow signals. |
+| Risk Assessor Agent | Identifies financial, operational, or market-related risks mentioned in the report. |
+| Investment Advisor Agent | Produces a balanced investment-oriented summary based on the extracted insights. |
+
+### Output Includes
+
+- Revenue analysis
+- Profitability analysis
+- Cash flow analysis
+- Risk assessment
+- Investment insight
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| API | FastAPI |
-| Orchestration | CrewAI |
-| LLM | OpenAI GPT-4o-mini |
-| PDF Loading | LangChain PyPDFLoader |
-| Vector DB (optional) | chromadb |
-| Config | python-dotenv |
-| Server | uvicorn |
+| Technology | Purpose |
+| --- | --- |
+| FastAPI | Backend API framework |
+| CrewAI | Multi-agent orchestration |
+| OpenAI GPT-4o-mini | Language model for financial reasoning |
+| LangChain PyPDFLoader | PDF parsing and document loading |
+| Uvicorn | ASGI server |
+| ChromaDB | Vector storage support |
+| python-dotenv | Environment variable management |
 
-----
+## Security & Reliability
 
-## Folder structure (professional view)
-
-```
-Financial Document Analyzer/
-├─ agents.py            # CrewAI agent definitions
-├─ main.py              # FastAPI app and routes
-├─ task.py              # orchestration helpers
-├─ tools.py             # file handling & utilities
-├─ requirements.txt     # runtime dependencies
-├─ data/                # temporary uploads (cleaned automatically)
-├─ outputs/             # generated JSON analyses
-└─ README.md
-```
-
-----
-
-## Installation & Setup
-
-Clone, create a venv, and install:
-
-```bash
-git clone https://github.com/Charangh09/AI-intern.git
-cd AI-intern
-python -m venv .venv
-# Windows PowerShell
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-```
-
-Create a `.env` containing at least:
-
-```env
-OPENAI_API_KEY=sk-...
-OPENAI_MODEL=gpt-4o-mini
-# Optional: CHROMADB settings, CREWAI_TOKEN
-```
-
-Run the app locally:
-
-```bash
-uvicorn main:app --host 0.0.0.0 --port 8000 --reload
-```
-
-----
-
-## API Reference
-
-### POST /analyze
-
-Accepts a single PDF upload, runs the agent pipeline, and returns a validated JSON analysis.
-
-- Content-Type: `multipart/form-data`
-- Form field: `file` — PDF file (required)
-
-Example request (cURL):
-
-```bash
-curl -X POST "http://localhost:8000/analyze" \
-  -H "Accept: application/json" \
-  -F "file=@/path/to/report.pdf"
-```
-
-Example successful response:
-
-```json
-{
-  "revenue_analysis": "Carefully cited revenue observations from the document...",
-  "profitability_analysis": "Profitability notes grounded in table X and section Y...",
-  "cash_flow_analysis": "Cash flow commentary based on statement on page N...",
-  "risk_assessment": "Enumerated risks as directly stated in the PDF...",
-  "investment_insight": "A balanced, evidence-based insight anchored to the report."
-}
-```
-
-Notes
-
-- The analysis must be traceable to the source document. The pipeline is designed to refuse or return partial failure if required evidence is missing.
-
-----
-
-## Security & Operational Notes
-
-- Keep `OPENAI_API_KEY` and other secrets out of source control — use environment variables or a secrets manager.
-- Enforce upload size limits and file-type checks.
-- Parse PDFs in a sandbox when possible and validate parsed content before passing to the model.
-- Log minimal personal data; treat outputs as potentially sensitive and restrict access.
-
-----
-
-## Deployment
-
-Minimal production guidance:
-
-- Containerize the app and run behind a TLS-terminating reverse proxy (NGINX/ALB).
-- Use a process manager (Gunicorn + Uvicorn workers or systemd) and autoscaling as needed.
-- Store outputs in a secure store and rotate logs. Use a secret manager for API keys.
-
-Example Dockerfile snippet
-
-```Dockerfile
-FROM python:3.11-slim
-WORKDIR /app
-COPY . /app
-RUN pip install -r requirements.txt
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
-```
-
-----
+- API keys and sensitive configuration are managed through environment variables.
+- Uploaded files are treated as temporary data and removed after processing.
+- PDF validation helps reduce unsupported or invalid file handling.
+- Structured JSON responses make the output easier to validate, store, and integrate.
+- The architecture keeps each agent focused, making the pipeline easier to debug and extend.
 
 ## Future Improvements
 
-- Add a non-blocking worker queue for large documents.
-- Add E2E tests for the agent pipeline and JSON schema validation.
-- Optional vectorized retrieval when processing very large reports.
-- Role-based access control and audit logs for sensitive deployments.
-
-----
-
-## Contributing
-
-Contributions are welcome. Please:
-
-1. Fork the repo and open a feature branch.
-2. Keep PRs small and scoped.
-3. Add tests where applicable and document behavior changes.
-4. Use descriptive commit messages and reference related issues.
-
-----
+- Add background job processing for larger PDFs
+- Introduce stronger JSON schema validation
+- Add document-level citations for better traceability
+- Store analysis history with user-level access controls
+- Improve evaluation with sample financial reports and benchmark outputs
+- Add a simple dashboard for reviewing generated insights
 
 ## License
 
-This project is available under the MIT License. Add a `LICENSE` file to the repository root to make this explicit.
-
-----
-
-If you'd like, I can also:
-
-- add a `LICENSE` file (MIT),
-- create a `Dockerfile` and `docker-compose.yml`,
-- add a small GitHub Actions workflow for linting and tests.
-
-File: [README.md](README.md)
+This project is released under the MIT License.
